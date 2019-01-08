@@ -28,7 +28,7 @@ bld/
 *.vcxproj.user
 
 # Research results
-results/
+RES02-OGL-VK-Renderer/results/
 
 # Visual Studio 2015 cache/options directory
 .vs/
