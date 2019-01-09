@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -153,6 +154,7 @@
     <None Include="shaders\cube_vs.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="GLShader.h" />
     <ClInclude Include="OpenGLApplication.h" />
     <ClInclude Include="Performance.h" />

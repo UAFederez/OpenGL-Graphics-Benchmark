@@ -1,6 +1,5 @@
 /* OpenGL Application */
-#ifndef RES_OGL_APPLICATION_H
-#define RES_OGL_APPLICATION_H
+#pragma once
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -20,8 +19,7 @@
 
 #include "GLShader.h"
 #include "Performance.h"
-
-const float PI = 3.1415926f;
+#include "Geometry.h"
 
 class OpenGLApplication
 {
@@ -36,7 +34,7 @@ public:
 
 private:
 
-	const unsigned mass_count = 35;
+	unsigned mass_count = 1;
 	unsigned total_mass;
 
 	std::vector<unsigned> indices;
@@ -84,11 +82,5 @@ private:
 	std::default_random_engine gen;
 	std::uniform_real_distribution<float> rand_f = std::uniform_real_distribution<float>(0.0, 1.0);
 
-	std::vector<glm::vec3> InitPositions();
-	std::vector<glm::vec3> InitSpherePositions();
-	std::vector<glm::vec3> GenerateCube(const float&, std::vector<unsigned>&);
-	std::vector<glm::vec3> GenerateSphere(const float&, const unsigned&, std::vector<unsigned>&);
 	static void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
-
-#endif

@@ -1,6 +1,5 @@
 /* Performance Statistics */
-#ifndef RES_PERFORMANCE_H
-#define RES_PERFORMANCE_H
+#pragma once 
 
 #include <chrono>
 #include <vector>
@@ -21,5 +20,3 @@ namespace pstat
 	point_t		getCurrentTime();
 	duration_t	getTimeDuration(const point_t& t1, const point_t& t2);
 };
-
-#endif

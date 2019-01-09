@@ -1,6 +1,5 @@
 /* OpenGL Shader */
-#ifndef RES_GLSHADER_H
-#define RES_GLSHADER_H
+#pragma once
 
 #include <glad/glad.h>
 #include <iostream>
@@ -34,6 +33,3 @@ private:
 	GLuint m_vert_shader, m_frag_shader;
 	GLuint LoadShader(const GLenum& shader_type, const std::string& path);
 };
-
-#endif
-
