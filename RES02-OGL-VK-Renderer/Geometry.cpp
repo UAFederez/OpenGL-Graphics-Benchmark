@@ -29,7 +29,7 @@ std::vector<glm::vec3> geom::InitSpherePositions(const unsigned& mass_count)
 	std::vector<glm::vec3> positions;
 
 	std::default_random_engine gen;
-	std::uniform_real_distribution<float> rand_f = std::uniform_real_distribution<float>(0.0, 1.0);
+	auto randf = std::uniform_real_distribution<float>(0.0, 1.0);
 
 	const unsigned segments = mass_count * 2;
 	const unsigned rings = mass_count;
@@ -55,9 +55,9 @@ std::vector<glm::vec3> geom::InitSpherePositions(const unsigned& mass_count)
 			{
 				theta = x * longitude_step;
 
-				x_pos = (r *  space) * sinf(theta) * sinf(phi) + rand_f(gen) * offset;
-				y_pos = (r *  space) * cosf(theta) + +rand_f(gen) * offset;
-				z_pos = (r *  space) * sinf(theta) * cosf(phi) + rand_f(gen) * offset;
+				x_pos = (r *  space) * sinf(theta) * sinf(phi) + randf(gen) * offset;
+				y_pos = (r *  space) * cosf(theta) + randf(gen)* offset;
+				z_pos = (r *  space) * sinf(theta) * cosf(phi) + randf(gen) * offset;
 
 				glm::vec3 circle_pnt = glm::vec3(x_pos, y_pos, z_pos);
 
@@ -66,15 +66,16 @@ std::vector<glm::vec3> geom::InitSpherePositions(const unsigned& mass_count)
 		}
 	}
 
+	std::cout << "TOTAL POSITIONS: " << positions.size() << std::endl;
+
 	return positions;
 }
 
-std::vector<glm::vec3> geom::GenerateSphere(const float& radius, const unsigned &subdivisions, std::vector<unsigned>& indices)
+std::vector<glm::vec3> geom::GenerateSphere( const float& radius, const unsigned &subdivisions, std::vector<unsigned>& indices )
 {
 	std::vector<glm::vec3> vertices;
 
-	if (subdivisions <= 0)
-		throw std::runtime_error("error: can't have zero or negative subdivisions");
+	assert(subdivisions > 0);
 
 	const unsigned segments = subdivisions * 2;
 	const unsigned rings = subdivisions;
@@ -88,7 +89,6 @@ std::vector<glm::vec3> geom::GenerateSphere(const float& radius, const unsigned 
 	float r_col, g_col, b_col;
 
 	const float inv_radius = 1 / radius;
-	unsigned ind_1, ind_2;
 
 	for (unsigned y = 0; y <= rings; y++)
 	{
@@ -122,20 +122,21 @@ std::vector<glm::vec3> geom::GenerateSphere(const float& radius, const unsigned 
 
 	std::cout << "unique verts: " << vertices.size() / 3 << std::endl;
 
+	unsigned idx1, idx2;
 	for (unsigned i = 0; i < rings; ++i)
 	{
-		ind_1 = i * (segments + 1);
-		ind_2 = ind_1 + segments + 1;
+		idx1 = i * (segments + 1);
+		idx2 = idx1 + segments + 1;
 
-		for (unsigned j = 0; j < segments; ++j, ++ind_1, ++ind_2)
+		for (unsigned j = 0; j < segments; ++j, ++idx1, ++idx2)
 		{
-			indices.push_back(ind_1);
-			indices.push_back(ind_1 + 1);
-			indices.push_back(ind_2);
+			indices.push_back(idx1);
+			indices.push_back(idx1 + 1);
+			indices.push_back(idx2);
 
-			indices.push_back(ind_2);
-			indices.push_back(ind_2 + 1);
-			indices.push_back(ind_1 + 1);
+			indices.push_back(idx2);
+			indices.push_back(idx2 + 1);
+			indices.push_back(idx1 + 1);
 		}
 
 	}
@@ -151,11 +152,11 @@ std::vector<glm::vec3> geom::GenerateCube(const float& length, std::vector<unsig
 
 	std::vector<glm::vec3> cube_vertices = {
 		glm::vec3(-side, -side, side),		glm::vec3(1.0, 0.0, 0.0),		glm::vec3(-1.0, -1.0, 1.0),
-		glm::vec3(side, -side, side),		glm::vec3(0.0, 1.0, 0.0),		glm::vec3(1.0, -1.0, 1.0),
-		glm::vec3(side,  side, side),		glm::vec3(0.0, 0.0, 1.0),		glm::vec3(1.0,  1.0, 1.0),
+		glm::vec3( side, -side, side),		glm::vec3(0.0, 1.0, 0.0),		glm::vec3(1.0, -1.0, 1.0),
+		glm::vec3( side,  side, side),		glm::vec3(0.0, 0.0, 1.0),		glm::vec3(1.0,  1.0, 1.0),
 		glm::vec3(-side,  side, side),		glm::vec3(1.0, 0.0, 1.0),		glm::vec3(-1.0, 1.0, 1.0),
-		glm::vec3(side,  side,-side),		glm::vec3(0.0, 1.0, 1.0),		glm::vec3(1.0,  1.0,-1.0),
-		glm::vec3(side, -side,-side),		glm::vec3(1.0, 1.0, 0.0),		glm::vec3(1.0, -1.0,-1.0),
+		glm::vec3( side,  side,-side),		glm::vec3(0.0, 1.0, 1.0),		glm::vec3(1.0,  1.0,-1.0),
+		glm::vec3( side, -side,-side),		glm::vec3(1.0, 1.0, 0.0),		glm::vec3(1.0, -1.0,-1.0),
 		glm::vec3(-side,  side,-side),		glm::vec3(1.0, 0.0, 0.0),		glm::vec3(-1.0, 1.0,-1.0),
 		glm::vec3(-side, -side,-side),		glm::vec3(0.0, 1.0, 0.0),		glm::vec3(-1.0,-1.0,-1.0)
 	};

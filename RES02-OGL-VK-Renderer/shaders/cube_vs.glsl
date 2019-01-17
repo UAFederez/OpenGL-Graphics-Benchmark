@@ -17,7 +17,7 @@ uniform mat4 projection;
 void main()
 {
 	VertexColor = vertexColor;
-	mat4 model_matrices = model;
+	mat4 model_matrices = mod_mat * model;
 
 	FragPos = vec3(model_matrices * vec4(vertexPosition + vert_offs, 1.0f));
 	Normals = vec3(model_matrices * vec4(vert_norm + vert_offs, 1.0f));

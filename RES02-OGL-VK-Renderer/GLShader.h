@@ -28,7 +28,10 @@ public:
 
 private:
 
-	GLint getLocation(const char* name) const { return glGetUniformLocation(this->ID, name); }
+	GLint getLocation(const char* name) const 
+	{ 
+		return glGetUniformLocation(this->ID, name); 
+	}
 
 	GLuint m_vert_shader, m_frag_shader;
 	GLuint LoadShader(const GLenum& shader_type, const std::string& path);

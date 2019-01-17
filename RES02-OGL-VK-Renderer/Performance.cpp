@@ -1,16 +1,16 @@
 #include "Performance.h"
 
-pstat::point_t pstat::getCurrentTime()
+pstat::timep_t pstat::getCurrentTime()
 {
 	return std::chrono::high_resolution_clock::now();
 }
 
-pstat::duration_t pstat::getTimeDuration(const point_t& t1, const point_t& t2)
+pstat::delta_t pstat::getTimeDuration(const timep_t& t1, const timep_t& t2)
 {
 	return std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t2);
 }
 
-void pstat::WriteCSV(const std::string &filename, const statlog_t &fps_stat, const statlog_t &mspf_stat)
+void pstat::WriteCSV(const std::string &filename, const stats_t &fps_stat, const stats_t &mspf_stat)
 {	
 	std::cout << "Writing results to file" << std::endl;
 	
@@ -30,7 +30,7 @@ void pstat::WriteCSV(const std::string &filename, const statlog_t &fps_stat, con
 	std::cout << "CSV file successfully written" << std::endl;
 }
 
-double pstat::GetAverage(const statlog_t& dataset)
+double pstat::GetAverage(const stats_t& dataset)
 {
 	double average = 0.0;
 	const unsigned offset = 5;

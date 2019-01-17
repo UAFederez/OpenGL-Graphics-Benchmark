@@ -4,19 +4,18 @@
 #include <chrono>
 #include <vector>
 #include <iostream>
-#include <iostream>
 #include <fstream>
 
 namespace pstat
 {
-	using point_t		= std::chrono::high_resolution_clock::time_point;
-	using duration_t	= std::chrono::duration<double>;
-	using statlog_t		= std::vector<double>;
+	using timep_t = std::chrono::high_resolution_clock::time_point;
+	using delta_t = std::chrono::duration<double>;
+	using stats_t = std::vector<double>;
 
-	double GetAverage(const statlog_t& dataset);
+	double GetAverage(const stats_t&);
 
-	void WriteCSV(const std::string &filename, const statlog_t &fps_stat, const statlog_t &mspf_stat);
+	void WriteCSV(const std::string&, const stats_t&, const stats_t&);
 
-	point_t		getCurrentTime();
-	duration_t	getTimeDuration(const point_t& t1, const point_t& t2);
+	timep_t	getCurrentTime();
+	delta_t	getTimeDuration(const timep_t&, const timep_t&);
 };

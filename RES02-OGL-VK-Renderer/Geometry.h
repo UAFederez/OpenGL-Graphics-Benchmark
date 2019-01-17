@@ -5,6 +5,7 @@
 #include <vector>
 #include <random>
 #include <glm/glm.hpp>
+#include <cassert>
 
 constexpr float PI = 3.1415926f;
 

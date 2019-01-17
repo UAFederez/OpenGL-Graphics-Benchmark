@@ -24,18 +24,6 @@ void main()
 
 	vec3 diffuse	= vec3(1.0) * diff_fac * light_col;
 
-	float constant	= 1.0f;
-	float linear	= 0.0014f;
-	float quadratic = 0.000007f;
-
-	const float strength = 2.0f;
-
-	float dist		= length(light_pos - FragPos);
-	float attenuate = 1.0 / (constant + linear * dist + quadratic * (dist * dist));
-
-	ambient *= attenuate * strength;
-	diffuse *= attenuate * strength;
-
 	vec3 result		= (ambient + diffuse) * obj_color;
 	FragmentColor = vec4(result, 1.0f);
 }

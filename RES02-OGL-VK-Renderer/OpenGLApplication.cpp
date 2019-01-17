@@ -1,5 +1,7 @@
 #include "OpenGLApplication.h"
 
+bool OpenGLApplication::wireframe = false;
+
 void OpenGLApplication::InitWindow()
 {
 	glfwInit();
@@ -14,7 +16,7 @@ void OpenGLApplication::InitWindow()
 		throw std::exception("ERROR::GLFW::WINDOW::NOT_INITIALIZED");
 
 	glfwMakeContextCurrent(window);
-	glfwSetKeyCallback(window, &key_cb);
+	glfwSetKeyCallback(window, key_cb);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		throw std::exception("ERROR::GLAD_UNINITIALIZED");
@@ -28,9 +30,9 @@ void OpenGLApplication::InitOpenGL()
 	setup_begin = pstat::getCurrentTime();
 
 	//vertices = GenerateSphere(1.0f, 4, indices);
-	vertices = geom::GenerateSphere(1.0f, 5, indices);
-
+	vertices = geom::GenerateSphere(1.0f, subd, indices);
 	cubePositions = geom::InitSpherePositions(mass_count);
+	total_mass = cubePositions.size();
 	glGenBuffers(1, &buffers[0]);
 
 	/* Store the 3D vector positions generated from InitPositions */
@@ -105,7 +107,8 @@ void OpenGLApplication::InitOpenGL()
 
 	const unsigned width = 15;
 
-	std::cout << "Setup time: " << (setup_dur.count() * 1000.0) << "ms\n"
+	std::cout 
+		<< "Setup time: " << (setup_dur.count() * 1000.0) << "ms\n"
 		<< "objs: " << total_mass << std::setw(width)
 		<< "tris: " << total_mass * (indices.size() / 3) << std::setw(width)
 		<< "vert: " << total_mass * indices.size() << std::setw(width)
@@ -131,10 +134,13 @@ void OpenGLApplication::RenderLoop()
 		if (frameTime.count() >= 1.0)
 		{
 			const double mspf = 1000.0 / (double)frames;
-			std::cerr << "FPS: " << frames << std::setw(width)
+			
+			std::cout
+				<< "FPS: " << frames << std::setw(width)
 				<< "MSPF: " << mspf << std::setw(width)
 				<< "RT: " << int(runTime.count()) << "s"
 				<< std::setw(width) << '\r';
+
 			mspf_stats.push_back(mspf);
 			fps_stats.push_back(frames);
 			prevFrame = currFrame;
@@ -151,13 +157,11 @@ void OpenGLApplication::RenderLoop()
 
 		const float radius = 250.0f;
 		const glm::vec3 light_pos = glm::vec3(float(sin(glfwGetTime()) * radius), float(cos(glfwGetTime()) * radius), 350.0f);
-		const glm::vec3 camera_pos = glm::vec3(0.0, 2.0, -10.0f);
+		const glm::vec3 camera_pos = glm::vec3(0.0, 2.0, camera_dist);
 
 		view = glm::translate(view, camera_pos);
 		projection = glm::perspective(glm::radians(45.0f), ASPECT, 0.1f, 1000.0f);
-		view = glm::lookAt(camera_pos, cubePositions[0], glm::vec3(0.0, 1.0, 0.0));
-		view = glm::rotate(view, glm::radians((float)glfwGetTime() * 10.0f), glm::vec3(1.0));
-		//model = glm::rotate(model, glm::radians(float(glfwGetTime() * 10.0f)), glm::vec3(1.0));
+		model = glm::rotate(model, glm::radians(float(glfwGetTime() * 10.0f)), glm::vec3(1.0));
 
 		CubeShader.SetFloat("time", currTime);
 		CubeShader.SetMat4("model", model);
@@ -167,6 +171,8 @@ void OpenGLApplication::RenderLoop()
 
 		glBindVertexArray(VAO);
 		glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, total_mass);
+
+		glPolygonMode(GL_FRONT_AND_BACK, (wireframe)? GL_LINE : GL_FILL );
 
 		glfwSwapInterval(0);
 		glfwSwapBuffers(window);
@@ -178,10 +184,12 @@ void OpenGLApplication::Cleanup()
 	fps_avg		= pstat::GetAverage(fps_stats);
 	mspf_avg	= pstat::GetAverage(fps_stats);
 
-	std::cout << std::endl << std::string(50, '-') << "\nAverage FPS: " << fps_avg
-		<< " | " << "Average MSPF: " << mspf_avg << std::endl;
+	std::cout 
+		<< std::endl << std::string(50, '-') 
+		<< "\nAverage FPS: " << fps_avg << " | " 
+		<< "Average MSPF: " << mspf_avg << std::endl;
 
-	pstat::WriteCSV("opengl_results-01",fps_stats, mspf_stats);
+	pstat::WriteCSV("opengl_results-01", fps_stats, mspf_stats);
 
 	glDeleteVertexArrays(1, &VAO);
 
@@ -192,8 +200,11 @@ void OpenGLApplication::Cleanup()
 	glfwTerminate();
 }
 
-void OpenGLApplication::key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
+void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) 
 		glfwSetWindowShouldClose(window, true);
+
+	if (key == GLFW_KEY_Z && action == GLFW_RELEASE)
+		OpenGLApplication::wireframe = !OpenGLApplication::wireframe;
 }

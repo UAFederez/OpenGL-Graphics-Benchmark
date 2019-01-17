@@ -24,6 +24,9 @@
 class OpenGLApplication
 {
 public:
+
+	friend void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 	void run()
 	{
 		InitWindow();
@@ -34,22 +37,29 @@ public:
 
 private:
 
-	unsigned mass_count = 1;
-	unsigned total_mass;
+	const uint32_t mass_count = 30;
+	uint32_t total_mass;
 
-	std::vector<unsigned> indices;
+	const float camera_dist = -300.0f;
+	const unsigned subd = 2;
+	static bool wireframe;
+
+	std::vector<uint32_t> indices;
 	std::vector<glm::vec3> vertices;
 
 	/* GLFW Window and Runtime Information */
-	const unsigned SCREEN_WIDTH = 864, SCREEN_HEIGHT = 648, RUN_TIME = 35;
+	const uint32_t SCREEN_WIDTH = 864;
+	const uint32_t SCREEN_HEIGHT = 648;
+	const uint32_t RUN_TIME = 35;
+
 	const float ASPECT = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
 	const bool TEST_ENABLE = false;
 	GLFWwindow* window = nullptr;
 
 	/* Performance statistics */
-	pstat::point_t		setup_begin, setup_end, prevFrame, currFrame;
-	pstat::duration_t	runTime, frameTime, setup_dur;
-	pstat::statlog_t	mspf_stats, fps_stats;
+	pstat::timep_t	setup_begin, setup_end, prevFrame, currFrame;
+	pstat::delta_t	runTime, frameTime, setup_dur;
+	pstat::stats_t	mspf_stats, fps_stats;
 
 	const unsigned width = 15;
 	
@@ -77,10 +87,8 @@ private:
 	void RenderLoop();
 	void Cleanup();
 
-	float abs(const float& val) const { return (val < 0) ? -val : val; }
-
 	std::default_random_engine gen;
 	std::uniform_real_distribution<float> rand_f = std::uniform_real_distribution<float>(0.0, 1.0);
-
-	static void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
+
+void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
