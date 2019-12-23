@@ -13,13 +13,13 @@ void OpenGLApplication::InitWindow()
 	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Renderer", nullptr, nullptr);
 	
 	if (window == nullptr)
-		throw std::exception("ERROR::GLFW::WINDOW::NOT_INITIALIZED");
+		throw std::runtime_error("ERROR::GLFW::WINDOW::NOT_INITIALIZED");
 
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_cb);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		throw std::exception("ERROR::GLAD_UNINITIALIZED");
+		throw std::runtime_error("ERROR::GLAD_UNINITIALIZED");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -105,13 +105,13 @@ void OpenGLApplication::InitOpenGL()
 	prevFrame = pstat::getCurrentTime();
 	setup_dur = pstat::getTimeDuration(setup_end, setup_begin);
 
-	const unsigned width = 15;
+	const unsigned sc_width = 15;
 
 	std::cout 
 		<< "Setup time: " << (setup_dur.count() * 1000.0) << "ms\n"
-		<< "objs: " << total_mass << std::setw(width)
-		<< "tris: " << total_mass * (indices.size() / 3) << std::setw(width)
-		<< "vert: " << total_mass * indices.size() << std::setw(width)
+		<< "objs: " << total_mass << std::setw(sc_width)
+		<< "tris: " << total_mass * (indices.size() / 3) << std::setw(sc_width)
+		<< "vert: " << total_mass * indices.size() << std::setw(sc_width)
 		<< '\n' << std::string(50, '-') << std::endl;
 }
 
@@ -200,7 +200,7 @@ void OpenGLApplication::Cleanup()
 	glfwTerminate();
 }
 
-void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
+void key_cb(GLFWwindow* window, int key, int, int action, int)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) 
 		glfwSetWindowShouldClose(window, true);

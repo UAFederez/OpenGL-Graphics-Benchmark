@@ -40,8 +40,6 @@ std::vector<glm::vec3> geom::InitSpherePositions(const unsigned& mass_count)
 	float phi, theta;
 	float x_pos, y_pos, z_pos;
 
-	const float inv_radius = 1 / float(mass_count);
-
 	const float space = 3.0f;
 	float offset = 10.0f;
 

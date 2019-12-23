@@ -18,4 +18,4 @@ namespace pstat
 
 	timep_t	getCurrentTime();
 	delta_t	getTimeDuration(const timep_t&, const timep_t&);
-};
+}

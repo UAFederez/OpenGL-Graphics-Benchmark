@@ -70,7 +70,7 @@ GLuint GLShader::LoadShader(const GLenum& shader_type, const std::string& path)
 void GLShader::SetFloat(const char* name, const float &f)
 {
 	glUniform1f(getLocation(name), f);
-};
+}
 
 void GLShader::SetVec2(const char* name, const glm::vec2 &f)
 {
@@ -85,4 +85,4 @@ void GLShader::SetVec3(const char* name, const glm::vec3 &f)
 void GLShader::SetMat4(const char* name, const glm::mat4 &mat)
 {
 	glUniformMatrix4fv(getLocation(name), 1, GL_FALSE, &mat[0][0]);
-};
+}

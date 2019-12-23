@@ -15,4 +15,4 @@ namespace geom
 	std::vector<glm::vec3> InitSpherePositions(const unsigned&);
 	std::vector<glm::vec3> GenerateCube(const float&, std::vector<unsigned>&);
 	std::vector<glm::vec3> GenerateSphere(const float&, const unsigned&, std::vector<unsigned>&);
-};
+}
